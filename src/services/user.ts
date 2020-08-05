@@ -24,21 +24,17 @@ export async function login(params) {
   });
 }
 
-export async function queryCurrent(): Promise<any> {
-  debugger;
-  const params={
-    username:'admin',
-   // password:'admin'
-  };
-  const params1=JSON.stringify(params);
-  console.log(params1);
+export async function queryCurrent(params): Promise<any> {
+
   return request('/api/currentUser', {
-    method: 'POST',
-    body: {
-      params1,
-      // username:'admin',
-      // password:'admin',
-      method: 'post',
-    },
+    method: 'GET',
+    params,
+  });
+}
+
+export async function jobScholarshipProvince(params) {
+  return request('/api/currentUser', {
+    method: 'GET',
+    params,
   });
 }
