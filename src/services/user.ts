@@ -24,7 +24,7 @@ export async function login(params) {
   });
 }
 
-export async function queryCurrent(params): Promise<any> {
+export async function queryCurrent1(params): Promise<any> {
 
   return request('/api/currentUser', {
     method: 'GET',
@@ -32,9 +32,10 @@ export async function queryCurrent(params): Promise<any> {
   });
 }
 
-export async function jobScholarshipProvince(params) {
-  return request('/api/currentUser', {
-    method: 'GET',
+export async function queryCurrent(params): Promise<any> {
+
+  return request('/sys/user/selectAll', {
+    method: 'POST',
     params,
   });
 }

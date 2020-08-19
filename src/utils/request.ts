@@ -4,6 +4,7 @@
  */
 import { extend } from 'umi-request';
 import { notification } from 'antd';
+import globalConstant from '@/globalConstant';
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -43,9 +44,45 @@ const errorHandler = (error: { response: Response }): Response => {
 /**
  * 配置request请求时的默认参数
  */
-const request = extend({
+const requestWithExtend = extend({
   errorHandler, // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
+  mode: 'cors',
 });
+
+/**
+ * 封装一次request，使response可以统一校验后使用
+ * 前后端联调的时候，需要将prefix及service地址跳转cas相关代码放开
+ */
+const request = async (url: string, option: any = {}) => {
+  const result = await requestWithExtend(url, {
+    getResponse: true,
+    ...option,
+    prefix: globalConstant.researchRestServiceUrl,
+  });
+  // result.response.headers.set
+  // 携带service地址跳转到cas的登陆页面
+  debugger;
+  if (result) {
+    const response = result.response;
+    if (response.headers.get('casRedirect') === 'login') {
+      window.location.href =
+        globalConstant.casLoginUrl +
+        encodeURIComponent(
+          globalConstant.researchRestServiceUrl + globalConstant.researchCasCallbackUrl,
+        );
+    } else if (response.headers.get('casRedirect') === 'logout') {
+      localStorage.clear();
+      window.location.href = globalConstant.researchRestServiceUrl + '/logout';
+    }
+    // 在此统一处理response前面的逻辑
+    return result.data;
+  } else {
+    return null;
+    window.location.href = globalConstant.researchRestServiceUrl + '/logout';
+  }
+
+};
+
 
 export default request;

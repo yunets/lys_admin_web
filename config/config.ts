@@ -90,6 +90,12 @@ export default {
   // umi routes: https://umijs.org/zh/guide/router.html
   routes: [
     {
+      path: '/user',
+      routes: [
+        { path: '/user/login', component: './User/Login' }
+      ]
+    },
+    {
       path: '/',
       component: '../layouts/BasicLayout',
       Routes: ['src/pages/Authorized'],
